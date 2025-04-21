@@ -637,10 +637,10 @@ function normalizeColor(hexCode) {
     initGradientColors() {
       // Couleurs mises à jour :
       this.sectionColors = [
-        '0x4639FF',
-        '0xCBBAFF',
-        '0x6B39FF',
-        '0xBCB8FF'
+        '0x5820FF',
+        '0x89CFF5',
+        '0x49B5EF',
+        '0x6B39FF'
       ].map(normalizeColor);
     }
   }
