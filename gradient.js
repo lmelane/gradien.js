@@ -353,8 +353,13 @@ function normalizeColor(hexCode) {
       e(this, "computedCanvasStyle", void 0);
       e(this, "conf", void 0);
       e(this, "uniforms", void 0);
-      e(this, "t", 1253106);
+      e(this, "t", 0);
       e(this, "last", 0);
+      
+      // Ajout des propriétés pour les stripes
+      e(this, "enableStripes", true); // Active/désactive les stripes
+      e(this, "stripeColors", void 0); // Sera initialisé dans initGradientColors
+      
       e(this, "width", void 0);
       e(this, "minWidth", 1111);
       e(this, "height", 600);
@@ -415,6 +420,7 @@ function normalizeColor(hexCode) {
           }
           this.mesh.material.uniforms.u_time.value = this.t;
           this.minigl.render();
+          this.drawStripes(); // Appel de la méthode drawStripes
         }
         if (0 !== this.last && this.isStatic) {
           this.minigl.render();
@@ -599,6 +605,81 @@ function normalizeColor(hexCode) {
     toggleColor(index) {
       this.activeColors[index] = 0 === this.activeColors[index] ? 1 : 0;
     }
+
+    // Nouvelle méthode pour dessiner les stripes avancées
+    drawStripes() {
+      // Vérifie si les stripes sont activées
+      if (!this.enableStripes) return;
+      
+      try {
+        // Récupère le contexte du canvas
+        const canvas = this.el;
+        const ctx = canvas.getContext('2d');
+        
+        // Dimensions (préserve les dimensions originales)
+        const width = canvas.width;
+        const height = canvas.height;
+        
+        // Configuration
+        const { width: stripeWidth, gap, angle, speed, opacity } = this.stripeConfig;
+        
+        // Animation basée sur le temps
+        const time = this.t * 0.001;
+        const offset = (time * speed) % (1 + gap);
+        
+        // Dessine par-dessus le gradient WebGL
+        ctx.save();
+        
+        // Transformations pour l'angle
+        ctx.translate(width / 2, height / 2);
+        ctx.rotate(angle);
+        ctx.translate(-width / 2, -height / 2);
+        
+        // Calcul du nombre de stripes nécessaires
+        const totalWidth = width * 1.5; // Assure une couverture complète
+        const stripeSize = width * stripeWidth;
+        const gapSize = width * gap;
+        const stripeCount = Math.ceil(totalWidth / (stripeSize + gapSize)) + 2;
+        
+        // Dessine chaque stripe
+        for (let i = -1; i < stripeCount; i++) {
+          // Couleur alternée
+          const colorIndex = Math.abs(i) % this.stripeColors.length;
+          const color = this.stripeColors[colorIndex];
+          
+          // Convertit le format de couleur (gère les différents formats possibles)
+          let r, g, b;
+          if (Array.isArray(color)) {
+            r = Math.floor(color[0] * 255);
+            g = Math.floor(color[1] * 255);
+            b = Math.floor(color[2] * 255);
+          } else if (typeof color === 'string' && color.startsWith('#')) {
+            const hex = color.substring(1);
+            r = parseInt(hex.substring(0, 2), 16);
+            g = parseInt(hex.substring(2, 4), 16);
+            b = parseInt(hex.substring(4, 6), 16);
+          } else {
+            // Couleur par défaut si format non reconnu
+            r = 255; g = 255; b = 255;
+          }
+          
+          // Dessine la stripe
+          ctx.globalAlpha = opacity;
+          ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+          ctx.fillRect(
+            i * (stripeSize + gapSize) - offset * totalWidth,
+            -height,
+            stripeSize,
+            height * 3
+          );
+        }
+        
+        ctx.restore();
+      } catch (error) {
+        console.warn('Erreur dans drawStripes:', error);
+      }
+    }
+
     showGradientLegend() {
       if (this.width > this.minWidth) {
         this.isGradientLegendVisible = !0;
@@ -642,5 +723,17 @@ function normalizeColor(hexCode) {
         '0x49B5EF',
         '0x6B39FF'
       ].map(normalizeColor);
+      
+      // Ajout des couleurs pour les stripes (utilise les mêmes couleurs)
+      this.stripeColors = [...this.sectionColors];
+      
+      // Configuration des stripes
+      this.stripeConfig = {
+        width: 0.15,     // largeur relative des stripes
+        gap: 0.08,       // espace entre les stripes
+        angle: 0.5,      // angle en radians
+        speed: 0.2,      // vitesse d'animation
+        opacity: 0.15    // opacité des stripes
+      };
     }
   }
