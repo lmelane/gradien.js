@@ -1,0 +1,34 @@
+<canvas class="canvas-item" id="gradient-canvas"></canvas>
+
+<!-- SVG caché définissant le clip-path avec coordonnées normalisées -->
+<svg width="0" height="0" style="position: absolute;">
+  <defs>
+    <clipPath id="svg-clip" clipPathUnits="objectBoundingBox">
+      <path d="M0.1906 0.2723 L0.0006 0.3987 V1 L1 1 V0.0004 L0.5626 0.2538 
+               C0.5399 0.2668 0.5163 0.2400 0.5225 0.2088 L0.5258 0.1893 
+               C0.5279 0.1802 0.5205 0.1724 0.5140 0.1763 L0.2416 0.3444 
+               C0.2203 0.3575 0.1963 0.3337 0.2005 0.3031 L0.2028 0.2841 
+               C0.2039 0.2751 0.1969 0.2680 0.1906 0.2723 Z"/>
+    </clipPath>
+  </defs>
+</svg>
+
+<style>
+  /* Définition des variables de couleur pour le gradient (utilisées par votre script) */
+  #gradient-canvas {
+    --gradient-color-1: #000000; 
+    --gradient-color-2: #0E0E11; 
+    --gradient-color-3: #1E1E1E;  
+    --gradient-color-4: #1E1D23;
+  }
+
+  .canvas-item {
+    /* Le canvas prend 100% de la largeur de son conteneur */
+    width: 100%;
+    /* On fixe l'aspect ratio pour que le canvas garde le format original (1533/1163) */
+    aspect-ratio: 1533 / 1163;
+    /* Pour les navigateurs qui ne supportent pas aspect-ratio, pensez à fixer height en CSS ou via JS */
+    clip-path: url(#svg-clip);
+    -webkit-clip-path: url(#svg-clip);
+  }
+</style>
