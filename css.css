@@ -16,10 +16,10 @@
 <style>
   /* Définition des variables de couleur pour le gradient (utilisées par votre script) */
   #gradient-canvas {
-    --gradient-color-1: #000000; 
-    --gradient-color-2: #0E0E11; 
-    --gradient-color-3: #1E1E1E;  
-    --gradient-color-4: #1E1D23;
+    --gradient-color-1: #3D50FF; 
+    --gradient-color-2: #4639FF; 
+    --gradient-color-3: #6F65FE;  
+    --gradient-color-4: #9673FE;
   }
 
   .canvas-item {

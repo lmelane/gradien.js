@@ -637,10 +637,10 @@ class Gradient {
   initGradientColors() {
     // Couleurs mises à jour :
     this.sectionColors = [
-      '0x000000',
-      '0x0E0E11',
-      '0x1E1E1E',
-      '0x1E1D23'
+      '0x3D50FF',
+      '0x4639FF',
+      '0x6F65FE',
+      '0x9673FE'
     ].map(normalizeColor);
   }
 }
